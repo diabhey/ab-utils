@@ -21,14 +21,14 @@
 template <typename U>
 std::ostream &operator<<(std::ostream &os, const std::vector<U> &v) {
   os << "[ ";
-  for (const auto itr : v) {
+  for (const auto &itr : v) {
     os << itr << " ";
   }
   os << "] " << std::endl;
   return os;
 }
 /**
- * @brief Wrapper around std::vector with powerdul functionalities
+ * @brief Wrapper around std::vector with powerful functionalities
  *
  * @tparam T type of the vector values
  */
@@ -82,6 +82,7 @@ class Vector {
   inline void Fill(std::size_t count, T value) {
     std::fill_n(std::begin(mVector), count, value);
   }
+
   /**
    * @brief Wrapper around std::iota
    *
@@ -91,31 +92,15 @@ class Vector {
   inline void FillwithSequentialValues(T startingValue) {
     std::iota(std::begin(mVector), std::end(mVector), startingValue);
   }
-  /**
-   * @brief Wrapper around std::generate with default
-   * random generator
-   *
-   */
-  inline void FillwithRandomValues() {
-    std::generate(std::begin(mVector), std::end(mVector), RandomGenerator);
-  }
-  /**
-   * @brief Wrapper around std::generate with default
-   * random generator
-   *
-   * @param count The count till which the value has to be filled
-   */
-  inline void FillwithRandomValues(std::size_t count) {
-    std::generate_n(std::begin(mVector), count, RandomGenerator);
-  }
 
   /**
    * @brief Wrapper around std::generate with a random generator
    * std::function provided
    *
-   * @param func Random function genrator object
+   * @param func Random function genrator object, default = RandomGenerator()
    */
-  inline void FillwithGeneratorFunc(std::function<T(void)> &func) {
+  inline void FillwithRandomGeneratedValues(
+      std::function<T(void)> func = RandomGenerator) {
     std::generate(std::begin(mVector), std::end(mVector), func);
   }
 
@@ -124,11 +109,15 @@ class Vector {
    * std::function provided
    *
    * @param count The count till which the value has to be filled
-   * @param func Random function genrator object
+   * @param func Random function genrator object, default = RandomGenerator()
    */
-  inline void FillwithGeneratorFunc(std::size_t count,
-                                    std::function<T(void)> &func) {
+  inline void FillwithRandomGeneratedValues(
+      std::size_t count, std::function<T(void)> func = RandomGenerator) {
     std::generate_n(std::begin(mVector), count, func);
+  }
+
+  inline void ReplaceValues(T valueOne, T valueTwo) {
+    std::replace(std::begin(mVector), std::end(mVector), valueOne, valueTwo);
   }
 
  private:
@@ -139,34 +128,3 @@ class Vector {
   }
   std::vector<T> mVector;
 };
-
-int gen() {
-  static int x = 1;
-  x++;
-  return x;
-}
-
-/**
- * @brief Tester: Sole purpose is to test the functionality of Vector class
- * TODO To be removed
- *
- * @return int Error code
- */
-int main() {
-  Vector<int> vec(5);
-
-  vec.Fill(2);
-  vec.GetVector().push_back(5);
-  vec.FillwithSequentialValues(101);
-
-  auto StaticGenerate = []() {
-    static int x = 0;
-    x++;
-    return x;
-  };
-  std::function<int(void)> FuncGen = StaticGenerate;
-  vec.FillwithGeneratorFunc(FuncGen);
-  std::cout << vec.GetVector() << std::endl;
-
-  return EXIT_SUCCESS;
-}
