@@ -1,4 +1,4 @@
-// #pragma once
+#pragma once
 /**
  * @brief: Super Sayyan Vector
  *
@@ -10,6 +10,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+
 /**
  * @brief Overloaded << operator to print the contents of a std::vector
  *
@@ -27,6 +28,7 @@ std::ostream &operator<<(std::ostream &os, const std::vector<U> &v) {
   os << "] " << std::endl;
   return os;
 }
+
 /**
  * @brief Wrapper around std::vector with powerful functionalities
  *
@@ -36,20 +38,17 @@ template <typename T>
 class Vector {
  public:
   /**
-   * @brief Construct a new Vector object
+   *
    *
    */
-  Vector() {
-    // Intialise the vector with 0 using std::fill
-    std::fill(std::begin(mVector), std::end(mVector), 0);
-  }
+  Vector() { std::fill(std::begin(mVector), std::end(mVector), 0); }
 
   /**
    * @brief Parameterized Constructor of Vector
    *
    * @param size size of the vector
    */
-  Vector(std::size_t size) { mVector.resize(size); }
+  Vector(std::size_t size) : mSize(size) { mVector.resize(mSize); }
 
   /**
    * @brief Get the const Vector object
@@ -64,6 +63,87 @@ class Vector {
    * @return std::vector<T>&
    */
   std::vector<T> &GetVector() { return mVector; }
+  /**
+   * @brief
+   *
+   */
+  class Iterator {
+   public:
+    typedef Iterator self_type;
+    typedef T value_type;
+    typedef T &reference;
+    typedef T *pointer;
+    /**
+     * @brief Construct a new Iterator object
+     *
+     * @param ptr
+     */
+    Iterator(reference ptr) : mPtr(ptr) {}
+    /**
+     * @brief
+     *
+     * @return const reference
+     */
+    const reference operator*() { return *mPtr; }
+    /**
+     * @brief
+     *
+     * @return const pointer
+     */
+    const pointer operator->() { return mPtr; }
+    /**
+     * @brief prefix operator
+     *
+     * @return self_type
+     */
+    self_type operator++() {
+      mPtr++;
+      return *this;
+    }
+    /**
+     * @brief post-fix operator
+     *
+     * @return self_type
+     */
+    self_type operator++(int) {
+      self_type i = *this;
+      mPtr++;
+      return i;
+    }
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return self_type
+     */
+    self_type operator=(const self_type &rhs) {
+      mPtr = rhs.mPtr;
+      return *this;
+    }
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator==(const self_type &rhs) { return mPtr == rhs.mPtr; }
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator!=(const self_type &rhs) { return mPtr != rhs.mPtr; }
+
+   private:
+    pointer mPtr;
+  };
+
+  Iterator Begin() { return Iterator(mVector.begin()); }
+
+  Iterator End() { return Iterator(mVector.end()); }
 
   /**
    * @brief Wrapper around std::fill
@@ -100,7 +180,7 @@ class Vector {
    * @param func Random function genrator object, default = RandomGenerator()
    */
   inline void FillwithRandomGeneratedValues(
-      std::function<T(void)> func = RandomGenerator) {
+      std::function<T(void)> func = std::bind(RandomGenerator)) {
     std::generate(std::begin(mVector), std::end(mVector), func);
   }
 
@@ -127,4 +207,5 @@ class Vector {
     return value;
   }
   std::vector<T> mVector;
+  std::size_t mSize;
 };

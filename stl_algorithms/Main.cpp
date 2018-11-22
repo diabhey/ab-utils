@@ -46,6 +46,10 @@ int main() {
   vec.ReplaceValues(2, 5);
   std::cout << "Testing std::replace " << vec.GetVector() << std::endl;
 
+  for (Vector<int>::Iterator itr = vec.Begin(); itr != vec.End(); ++itr) {
+    std::cout << *itr << std::endl;
+  }
+
   /**
    * TODO Continue implementation of replace and replace_if
    * try and classify the value modifiers into a separate class or
