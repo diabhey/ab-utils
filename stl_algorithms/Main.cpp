@@ -1,5 +1,6 @@
-#include <iostream>
+#include "UtilFunc.h"
 #include "Vector.h"
+#include <iostream>
 
 /**
  * @brief Tester: Sole purpose of this app is to test the functionality of
@@ -12,10 +13,14 @@ int main() {
   // Create a Vector instance
   Vector<int> vec(5);
 
-  vec.Fill(2);
+  algos::mods::Fill(vec, 110);
+
+  std::cout << vec.GetVector() << std::endl;
+
+  algos::mods::Fill(vec, 2);
   std::cout << "Testing std::fill " << vec.GetVector() << std::endl;
 
-  vec.FillwithSequentialValues(101);
+  algos::mods::FillWithSequentialValues(vec, 101);
   std::cout << "Testing std::iota " << vec.GetVector() << std::endl;
 
   // Sequential static generator
@@ -26,35 +31,25 @@ int main() {
   };
   std::function<int(void)> FuncGen = SequentialGen;
 
-  vec.FillwithRandomGeneratedValues(/*default generator used*/);
+  algos::mods::FillWithRandomGeneratedValues(vec /*default generator used*/);
   std::cout << "Testing std::generate with default RGN " << vec.GetVector()
             << std::endl;
 
-  vec.FillwithRandomGeneratedValues(2 /*default generator used*/);
+  algos::mods::FillWithRandomGeneratedValues(vec, 2 /*default generator used*/);
   std::cout << "Testing std::generate_n with default RGN " << vec.GetVector()
             << std::endl;
 
-  vec.FillwithRandomGeneratedValues(FuncGen);
+  algos::mods::FillWithRandomGeneratedValues(vec, FuncGen);
   std::cout << "Testing std::generate with user defined RGN " << vec.GetVector()
             << std::endl;
 
-  vec.FillwithRandomGeneratedValues(2, FuncGen);
+  algos::mods::FillWithRandomGeneratedValues(vec, 2, FuncGen);
   std::cout << " Testing std::generate_n with user defined RGN "
             << vec.GetVector() << std::endl;
 
-  vec.Fill(2);
-  vec.ReplaceValues(2, 5);
+  algos::mods::Fill(vec, 2);
+  algos::mods::ReplaceValues(vec, 2, 5);
   std::cout << "Testing std::replace " << vec.GetVector() << std::endl;
-
-  for (Vector<int>::Iterator itr = vec.Begin(); itr != vec.End(); ++itr) {
-    std::cout << *itr << std::endl;
-  }
-
-  /**
-   * TODO Continue implementation of replace and replace_if
-   * try and classify the value modifiers into a separate class or
-   * equivalent
-   */
 
   return EXIT_SUCCESS;
 }

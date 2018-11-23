@@ -5,10 +5,7 @@
  * @author: bigillu
  */
 
-#include <algorithm>
-#include <functional>
 #include <iostream>
-#include <random>
 #include <vector>
 
 /**
@@ -34,11 +31,31 @@ std::ostream &operator<<(std::ostream &os, const std::vector<U> &v) {
  *
  * @tparam T type of the vector values
  */
-template <typename T>
-class Vector {
- public:
+template <typename T> class Vector {
+public:
   /**
+   * @brief Public Typedefs
    *
+   */
+  using iterator = typename std::vector<T>::iterator;
+  using value_type = T;
+
+  /**
+   * @brief Returns the custom iterator to the beginning of the container
+   *
+   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
+   */
+  iterator begin() { return mVector.begin(); }
+
+  /**
+   * @brief Returns the custom iterator to the end() of the container
+   *
+   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
+   */
+  iterator end() { return mVector.end(); }
+
+  /**
+   * @brief Default construct a new Vector obejct
    *
    */
   Vector() { std::fill(std::begin(mVector), std::end(mVector), 0); }
@@ -63,149 +80,8 @@ class Vector {
    * @return std::vector<T>&
    */
   std::vector<T> &GetVector() { return mVector; }
-  /**
-   * @brief
-   *
-   */
-  class Iterator {
-   public:
-    typedef Iterator self_type;
-    typedef T value_type;
-    typedef T &reference;
-    typedef T *pointer;
-    /**
-     * @brief Construct a new Iterator object
-     *
-     * @param ptr
-     */
-    Iterator(reference ptr) : mPtr(ptr) {}
-    /**
-     * @brief
-     *
-     * @return const reference
-     */
-    const reference operator*() { return *mPtr; }
-    /**
-     * @brief
-     *
-     * @return const pointer
-     */
-    const pointer operator->() { return mPtr; }
-    /**
-     * @brief prefix operator
-     *
-     * @return self_type
-     */
-    self_type operator++() {
-      mPtr++;
-      return *this;
-    }
-    /**
-     * @brief post-fix operator
-     *
-     * @return self_type
-     */
-    self_type operator++(int) {
-      self_type i = *this;
-      mPtr++;
-      return i;
-    }
-    /**
-     * @brief
-     *
-     * @param rhs
-     * @return self_type
-     */
-    self_type operator=(const self_type &rhs) {
-      mPtr = rhs.mPtr;
-      return *this;
-    }
-    /**
-     * @brief
-     *
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    bool operator==(const self_type &rhs) { return mPtr == rhs.mPtr; }
-    /**
-     * @brief
-     *
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    bool operator!=(const self_type &rhs) { return mPtr != rhs.mPtr; }
 
-   private:
-    pointer mPtr;
-  };
-
-  Iterator Begin() { return Iterator(mVector.begin()); }
-
-  Iterator End() { return Iterator(mVector.end()); }
-
-  /**
-   * @brief Wrapper around std::fill
-   *
-   * @param value Value to be filled with
-   */
-  inline void Fill(T value) {
-    std::fill(std::begin(mVector), std::end(mVector), value);
-  }
-  /**
-   * @brief Wrapper arounf std::fill_n
-   *
-   * @param count The count till which the value has to be filled
-   * @param value value to be filled
-   */
-  inline void Fill(std::size_t count, T value) {
-    std::fill_n(std::begin(mVector), count, value);
-  }
-
-  /**
-   * @brief Wrapper around std::iota
-   *
-   * @param startingValue Starting value of the sequence
-   *
-   */
-  inline void FillwithSequentialValues(T startingValue) {
-    std::iota(std::begin(mVector), std::end(mVector), startingValue);
-  }
-
-  /**
-   * @brief Wrapper around std::generate with a random generator
-   * std::function provided
-   *
-   * @param func Random function genrator object, default = RandomGenerator()
-   */
-  inline void FillwithRandomGeneratedValues(
-      std::function<T(void)> func = std::bind(RandomGenerator)) {
-    std::generate(std::begin(mVector), std::end(mVector), func);
-  }
-
-  /**
-   * @brief Wrapper around std::generate with a random generator
-   * std::function provided
-   *
-   * @param count The count till which the value has to be filled
-   * @param func Random function genrator object, default = RandomGenerator()
-   */
-  inline void FillwithRandomGeneratedValues(
-      std::size_t count, std::function<T(void)> func = RandomGenerator) {
-    std::generate_n(std::begin(mVector), count, func);
-  }
-
-  inline void ReplaceValues(T valueOne, T valueTwo) {
-    std::replace(std::begin(mVector), std::end(mVector), valueOne, valueTwo);
-  }
-
- private:
-  static T RandomGenerator() {
-    std::random_device device;
-    auto value = device();
-    return value;
-  }
+private:
   std::vector<T> mVector;
   std::size_t mSize;
 };
