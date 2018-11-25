@@ -31,8 +31,9 @@ std::ostream &operator<<(std::ostream &os, const std::vector<U> &v) {
  *
  * @tparam T type of the vector values
  */
-template <typename T> class Vector {
-public:
+template <typename T>
+class Vector {
+ public:
   /**
    * @brief Public Typedefs
    *
@@ -58,10 +59,10 @@ public:
    * @brief Default construct a new Vector obejct
    *
    */
-  Vector() { std::fill(std::begin(mVector), std::end(mVector), 0); }
+  Vector() {}
 
   /**
-   * @brief Parameterized Constructor of Vector
+   * @brief Parameterized Constructor of Vectorl
    *
    * @param size size of the vector
    */
@@ -81,7 +82,17 @@ public:
    */
   std::vector<T> &GetVector() { return mVector; }
 
-private:
+  /**
+   * @brief Wrapper around vector::erase
+   *
+   * @param current The iterator which points to the value to be erased
+   * @param end Iterator that points to the end of the container
+   */
+  void erase(const iterator &current, const iterator &end) {
+    mVector.erase(current, end);
+  }
+
+ private:
   std::vector<T> mVector;
   std::size_t mSize;
 };
