@@ -5,6 +5,7 @@
  * @author: bigillu
  */
 
+#include <cassert>
 #include <iostream>
 #include <vector>
 
@@ -42,32 +43,58 @@ class Vector {
   using value_type = T;
 
   /**
-   * @brief Returns the custom iterator to the beginning of the container
-   *
-   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
-   */
-  iterator begin() { return mVector.begin(); }
-
-  /**
-   * @brief Returns the custom iterator to the end() of the container
-   *
-   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
-   */
-  iterator end() { return mVector.end(); }
-
-  /**
    * @brief Default construct a new Vector obejct
    *
    */
   Vector() {}
 
   /**
-   * @brief Parameterized Constructor of Vectorl
+   * @brief Parameterized Constructor of Vector
    *
    * @param size size of the vector
    */
   Vector(std::size_t size) : mSize(size) { mVector.resize(mSize); }
 
+  /**
+   * @brief Copy constructor a new Vector object
+   *
+   * @param rhs
+   */
+  Vector(Vector &rhs) {
+    assert(CopyPolicy(rhs));
+    std::copy(this->begin(), this->end(), std::back_inserter(rhs.GetVector()));
+  }
+
+  /**
+   * @brief
+   *
+   * @param rhs
+   * @return Vector&
+   */
+  Vector &operator=(Vector &rhs) {
+    assert(CopyPolicy(rhs));
+    return *this = Vector(rhs);
+  }
+
+  /**
+   * @brief
+   *
+   * @param rhs
+   * @return Vector&
+   */
+  Vector &operator=(Vector &&rhs) {
+    std::swap(mVector, rhs.mVector);
+    std::swap(mSize, rhs.mSize);
+    return *this;
+  }
+  /**
+   * @brief Construct a new Vector object
+   *
+   * @param other
+   */
+  Vector(Vector &&other) noexcept
+      : mVector(std::exchange(other.mVector, {})),
+        mSize(std::exchange(other.mSize, 0)) {}
   /**
    * @brief Get the const Vector object
    *
@@ -83,6 +110,26 @@ class Vector {
   std::vector<T> &GetVector() { return mVector; }
 
   /**
+   * @brief Get the Size object *
+   * @return const std::size_t
+   */
+  const std::size_t GetSize() const { return mSize; }
+
+  /**
+   * @brief Returns the custom iterator to the beginning of the container
+   *
+   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
+   */
+  iterator begin() { return mVector.begin(); }
+
+  /**
+   * @brief Returns the custom iterator to the end() of the container
+   *
+   * @return iterator Custom Iterator(wrapped around std::vector<T>::iterator)
+   */
+  iterator end() { return mVector.end(); }
+
+  /**
    * @brief Wrapper around vector::erase
    *
    * @param current The iterator which points to the value to be erased
@@ -93,6 +140,18 @@ class Vector {
   }
 
  private:
+  /**
+   * @brief
+   *
+   * @tparam pred
+   * @param predicate
+   * @return true
+   * @return false
+   */
+  bool CopyPolicy(Vector &predicate) {
+    return this->GetSize() == predicate.GetSize();
+  }
+
   std::vector<T> mVector;
   std::size_t mSize;
 };

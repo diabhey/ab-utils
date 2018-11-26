@@ -59,6 +59,7 @@ used*/);
   std::cout << "********** Testing Structural Changers  **********\n"
             << std::endl;
   Vector<double> dVec;
+  std::cout << dVec.GetVector().size() << std::endl;
   dVec.GetVector().push_back(1);
   dVec.GetVector().push_back(1);
   dVec.GetVector().push_back(2);
@@ -70,5 +71,27 @@ used*/);
   std::cout << "Testing std::unique " << dVec.GetVector() << std::endl;
   algos::changers::Remove(dVec, 1);
   std::cout << "Testing std::remove " << dVec.GetVector() << std::endl;
+
+  std::cout << "********** Testing Movers  **********\n";
+
+  Vector<int> vCopy;
+  Vector<int> vec2(vCopy);
+  std::cout << "Testing copy constructor " << vec2.GetVector() << std::endl;
+
+  // vCopy = vec2;
+  // std::cout << "Testing copy assignment " << vCopy.GetVector() << std::endl;
+
+  static_assert(std::is_nothrow_move_constructible<Vector<int>>::value,
+                "Move constructible");
+  Vector<int> vecMove(std::move(vec));
+  std::cout << "Testing move constructor " << vecMove.GetVector() << std::endl;
+
   return EXIT_SUCCESS;
 }
+
+/**
+ * @brief TODO
+ *  Copy policy - Predicate
+ * use std::copy
+ * rule of 5
+ */
