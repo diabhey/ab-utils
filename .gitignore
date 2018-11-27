@@ -1,0 +1,18 @@
+# Compiled source
+*.out
+*.so
+*.o
+
+# Packages
+*.tar
+*.gz
+*.zip
+
+# Logs
+*.log
+
+# VS Code
+*.vscode
+
+# Build directory
+stl/build/
