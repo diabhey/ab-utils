@@ -94,6 +94,8 @@ used*/);
 /**
  * @brief TODO
  * move and copy check std::swap and then look into erasure.
- * google tests!
+ * google tests
+ * fix fill and utility functions
+ * data accessing tests in VEctor
  *
  */

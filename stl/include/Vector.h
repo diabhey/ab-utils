@@ -111,7 +111,7 @@ class Vector {
   std::vector<T> &GetVector() { return mVector; }
 
   /**
-   * @brief Get the Size object *
+   * @brief Get the Size object
    * @return const std::size_t
    */
   const std::size_t GetSize() const { return mVector.size(); }
