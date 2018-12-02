@@ -1,10 +1,15 @@
 #pragma once
-/**
- * @brief: Super Sayyan Vector
- *
- * @author: bigillu
- */
 
+/**
+ * @file Vector.h
+ * @author bigillu
+ * @brief Super Sayyan Vector
+ * @version 0.1
+ * @date 2018-12-02
+ *
+ * @copyright Copyright (c) 2018
+ *
+ */
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -71,7 +76,6 @@ class Vector {
    */
   Vector &operator=(const Vector &rhs) {
     if (this != &rhs) {
-      mVector.clear();
       copy(rhs);
     }
     return *this;
@@ -155,6 +159,8 @@ class Vector {
     mVector.erase(current, end);
   }
 
+  bool empty() const { return mVector.empty(); }
+
  private:
   /**
    * @brief Wrapper around std::copy
@@ -163,7 +169,8 @@ class Vector {
    */
   void copy(const Vector &rhs) {
     mVector.resize(rhs.GetSize());
-    std::copy(rhs.begin(), rhs.end(), std::back_inserter(GetVector()));
+    mVector.clear();
+    std::copy(rhs.begin(), rhs.end(), std::back_inserter(mVector));
   }
 
   std::vector<T> mVector;
