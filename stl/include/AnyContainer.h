@@ -8,13 +8,13 @@
  * @copyright Copyright (c) 2018
  *
  */
+#include <iostream>
 #include <memory>
-#include <type_traits>
-#include <typeindex>
-#include <typeinfo>
-#include <utility>
 /**
- * @brief
+ * @brief Magic Interface that holds any type of STL container
+ * or even custom container.
+ * hint: As long as the client implements a size() method ;)
+ * A glue between runtime and compile time polymorphism
  *
  */
 class AnyContainer {
@@ -22,17 +22,18 @@ class AnyContainer {
   template <typename T>
   AnyContainer(T &&rhs)
       : mImpl(std::make_unique<Type<T>>(std::forward<T>(rhs))) {}
-  bool empty() const { return mImpl->empty(); }
+  size_t size() const { return mImpl->size(); }
+
  private:
   struct BaseType {
     virtual ~BaseType() {}
-    virtual bool empty() const = 0;
+    virtual size_t size() const = 0;
   };
   template <typename T>
   struct Type : BaseType {
     Type(const T &value) : mValue(value) {}
-    bool empty() const override { return mValue.empty(); }
+    size_t size() const override { return mValue.size(); }
     T mValue;
   };
-  std::unique_ptr<BaseType> mImpl;
+  std::unique_ptr<const BaseType> mImpl;
 };

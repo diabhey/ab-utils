@@ -159,7 +159,25 @@ class Vector {
     mVector.erase(current, end);
   }
 
+  /**
+   * @brief Wrapper around vector::clear
+   *
+   */
+  void clear() { mVector.clear(); }
+  /**
+   * @brief Wrapper around vector::empty
+   *
+   * @return true Vector is empty
+   * @return false Vector not empty
+   */
   bool empty() const { return mVector.empty(); }
+
+  /**
+   * @brief Wrapper around vector::size
+   *
+   * @return size_t Return the size of the Vector
+   */
+  size_t size() { return mVector.size(); }
 
  private:
   /**

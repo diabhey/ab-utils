@@ -85,24 +85,29 @@ TEST_F(VectorTest, Erase) {
 }
 
 TEST_F(VectorTest, AnyTypeHolder) {
-  std::vector<AnyContainer> ce;
+  std::vector<AnyContainer> ac;
   std::vector<double> dVec{1.0, 2.0};
   Vector<int> intVec(2);
   algos::mods::FillWithSequentialValues(intVec, 55);
   Vector<std::string> stringVec;
   std::map<int, std::string> stringMap;
-  ce.push_back(intVec);
-  ce.push_back(stringVec);
-  ce.push_back(stringMap);
-  ce.push_back(dVec);
 
-  for (const auto& itr : ce) {
-    std::cout << std::boolalpha << itr.empty() << std::endl;
+  stringMap.emplace(1, "valueOne");
+  stringMap.emplace(2, "valueTwo");
+
+  ac.emplace_back(intVec);
+  ac.emplace_back(stringVec);
+  ac.emplace_back(stringMap);
+  ac.emplace_back(dVec);
+
+  for (const auto& itr : ac) {
+    std::cout << "Container contents size: " << itr.size() << std::endl;
   }
 }
-/**
- * @brief TODO
- * 1. How to determine the type
- * 2. What all can we once we know the type.
- */
+
 }  // namespace stl::vector::test
+
+/**
+ * @brief TODO Remove Main.cpp!
+ *
+ */
