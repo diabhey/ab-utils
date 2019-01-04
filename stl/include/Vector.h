@@ -3,7 +3,7 @@
 /**
  * @file Vector.h
  * @author bigillu
- * @brief Super Sayyan Vector
+ * @brief Custom Vector
  * @version 0.1
  * @date 2018-12-02
  *
@@ -150,6 +150,14 @@ class Vector {
   const_iterator end() const { return mVector.cend(); }
 
   /**
+   * @brief Resizes the vector with new size.
+   *
+   * @param count new sixe of the Vector
+   * @param value the value to initialise with
+   */
+  void resize(size_t count) { mVector.resize(count); }
+
+  /**
    * @brief Wrapper around vector::erase
    *
    * @param current The iterator which points to the value to be erased
@@ -158,7 +166,6 @@ class Vector {
   void erase(const iterator &current, const iterator &end) {
     mVector.erase(current, end);
   }
-
   /**
    * @brief Wrapper around vector::clear
    *
