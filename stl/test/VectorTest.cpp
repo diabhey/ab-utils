@@ -1,7 +1,7 @@
 /**
  * @file VectorTest.cpp
  * @author bigillu
- * @brief Tester class for Vector
+ * @brief Tester class for Custom Vector
  * @version 0.1
  * @date 2018-12-02
  *
@@ -90,8 +90,8 @@ TEST_F(VectorTest, AnyTypeHolder) {
   Vector<int> intVec(2);
   algos::mods::FillWithSequentialValues(intVec, 55);
   Vector<std::string> stringVec;
-  std::map<int, std::string> stringMap;
 
+  std::map<int, std::string> stringMap;
   stringMap.emplace(1, "valueOne");
   stringMap.emplace(2, "valueTwo");
 
@@ -101,13 +101,7 @@ TEST_F(VectorTest, AnyTypeHolder) {
   ac.emplace_back(dVec);
 
   for (const auto& itr : ac) {
-    std::cout << "Container contents size: " << itr.size() << std::endl;
+    std::cout << "Sub container size: " << itr.size() << std::endl;
   }
 }
-
 }  // namespace stl::vector::test
-
-/**
- * @brief TODO Remove Main.cpp!
- *
- */
