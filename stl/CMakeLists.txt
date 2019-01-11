@@ -22,12 +22,7 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 set(SRC ${CMAKE_CURRENT_SOURCE_DIR})
 set(INCLUDE_DIR ${SRC}/include)
 
-set(SRCS
-    ${SRC}/src//Main.cpp)
-
-
 include_directories(${INCLUDE_DIR})
-add_executable(stl ${SRCS})
 
 # Test
 add_subdirectory(test)
