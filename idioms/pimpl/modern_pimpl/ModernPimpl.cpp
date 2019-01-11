@@ -12,7 +12,7 @@
 #include "ModernPimpl.h"
 #include <iostream>
 
-class Impl {
+class ModernPimpl::Impl {
  public:
   Impl() { std::cout << "\nImpl constructor called" << std::endl; }
   ~Impl() { std::cout << "Impl destructor called" << std::endl; }

@@ -11,10 +11,10 @@
 
 #include <memory>
 
-/* Forward declaration */
-class Impl;
-
 class ModernPimpl {
+  /* Forward declaration */
+  class Impl;
+
  public:
   ModernPimpl();
   ~ModernPimpl();
@@ -22,7 +22,7 @@ class ModernPimpl {
   /* Copyable */
   ModernPimpl(const ModernPimpl& rhs);
   ModernPimpl& operator=(const ModernPimpl& rhs);
-  /* Moovable */
+  /* Movable */
   ModernPimpl(ModernPimpl&& rhs) noexcept;
   ModernPimpl& operator=(ModernPimpl&& rhs) noexcept;
   /* Const version of Print() */
