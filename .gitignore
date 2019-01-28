@@ -1,7 +1,13 @@
+# VS Code
+*.vscode
+
 # Compiled source
 *.out
 *.so
 *.o
+
+# Build directory
+stl/build/
 
 # Packages
 *.tar
@@ -11,8 +17,7 @@
 # Logs
 *.log
 
-# VS Code
-*.vscode
-
-# Build directory
-stl/build/
+# Misc
+*.tmp
+*.bak
+*.swp
