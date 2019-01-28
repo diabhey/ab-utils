@@ -1,3 +1,15 @@
+/**
+ * @file UtilityFunctions.h
+ * @author bigillu
+ * @brief A collection of STL algorithms classified as per the STL world map
+ * created by Jonathan Boccara of fluentcpp:
+ * https://www.fluentcpp.com/getthemap/
+ * @version 0.1
+ * @date 2019-01-28
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #include <algorithm>
 #include <functional>
 #include <random>

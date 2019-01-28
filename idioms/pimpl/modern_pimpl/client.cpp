@@ -2,6 +2,9 @@
  * @file client.cpp
  * @author bigillu
  * @brief modern pimpl implementation tester
+ * Code compilation:
+ * g++-7 -std=c++17 -I/ModernPimpl.h ModernPimpl.cpp client.cpp
+ *
  * @version 0.1
  * @date 2019-01-11
  *

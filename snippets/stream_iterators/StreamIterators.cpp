@@ -3,6 +3,8 @@
  * @author bigillu
  * @brief Test application to demonstrate the use of stream iterators.
  * The application copies unique contents from src file to destination file
+ * Code compilation: g++-7 -std=c++17 StreamIterators.cpp
+ * Code execution: ./a.out <src.file> <dst.file>
  * @version 0.1
  * @date 2019-01-23
  *

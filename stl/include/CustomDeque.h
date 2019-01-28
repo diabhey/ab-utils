@@ -1,8 +1,13 @@
 /**
- * @brief: Custom deque container wrapped around a STL deque implementation
- * @copyright: Copyright (c) HeartyByte.Inc 2018, All Rights Reserved.
+ * @file CustomDeque.h
+ * @author bigillu
+ * @brief Custom Deque implementation
+ * @version 0.1
+ * @date 2019-01-28
+ *
+ * @copyright Copyright (c) 2019
+ *
  */
-
 #include <deque>
 #include <iostream>
 #include <stdexcept>

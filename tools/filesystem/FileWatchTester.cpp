@@ -4,7 +4,8 @@
  * @brief File Watcher tester application
  * Code compilation
  *   g++ -std=c++17 -Wall -pedantic FileWatchTester.cpp -lstdc++fs
- *   clang++ -std=c++17 -stdlib=libc++ -Wall -pedantic FileWatchTester.cpp -lc++fs
+ *   clang++ -std=c++17 -stdlib=libc++ -Wall -pedantic FileWatchTester.cpp
+ * -lc++fs
  * @version 0.1
  * @date 2019-01-21
  *
@@ -17,8 +18,7 @@
 int main() {
   // Create a FileWatcher instance that will check the current folder for
   // changes every 5 seconds
-  FileWatcher fw{"/home/bigillu/code/libs/utilities/tools",
-                 std::chrono::milliseconds(5000)};
+  FileWatcher fw{"./", std::chrono::milliseconds(5000)};
 
   // Start monitoring a folder for changes and (in case of changes)
   // run a user provided lambda function

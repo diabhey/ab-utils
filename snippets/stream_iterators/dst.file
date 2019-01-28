@@ -1,0 +1,7 @@
+exclusive_scan
+for_each_n
+inclusive_scan
+reduce
+transform_exclusive_scan
+transform_inclusive_scan
+transform_reduce
