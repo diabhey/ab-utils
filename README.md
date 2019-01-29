@@ -16,6 +16,7 @@ As a C++ software engineer, I am always on the look out for new language feature
 Collection of popular C++ idioms written in modern C++.
 
 1. PIMPL
+2. CRTP (Curiously Recurring Template Pattern)
 
 ### Snippets
 
