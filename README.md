@@ -23,6 +23,7 @@ Collection of popular C++ idioms written in modern C++.
 Storing ground for reusable code snippets which demonstrate niche techniques, better performance etc.
 
 1. Stream Iterators
+2. String View
 
 ### STL
 This section contains all things STL, from custom containers to STL algortihm utilities.
