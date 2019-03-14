@@ -24,6 +24,7 @@ Storing ground for reusable code snippets which demonstrate niche techniques, be
 
 1. Stream Iterators
 2. String View
+3. Threads
 
 ### STL
 This section contains all things STL, from custom containers to STL algortihm utilities.
