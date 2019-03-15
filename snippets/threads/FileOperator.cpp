@@ -20,7 +20,8 @@
 class FileOperator {
  public:
   FileOperator(std::string& filename)
-      : mFileHandler(filename, std::ios::in | std::ios::out | std::ios::trunc |
+      : mDataReady(false),
+        mFileHandler(filename, std::ios::in | std::ios::out | std::ios::trunc |
                                    std::ios::binary) {
     if (not mFileHandler.is_open()) {
       throw std::runtime_error("Failed to open the file \n");
@@ -29,24 +30,26 @@ class FileOperator {
 
   void Read() {
     std::unique_lock<std::mutex> guard(mMutex);
-    while (mCondVar.wait_for(guard, std::chrono::seconds(5)) ==
-           std::cv_status::timeout) {
-      mFileHandler.seekg(0, std::ios::beg);
-      std::cout << "File contains: " << mFileHandler.rdbuf() << std::endl;
-    }
+    mCondVar.wait(guard, [this]() { return mDataReady == true; });
+    mFileHandler.seekg(0, std::ios::beg);
+    std::cout << "File contains: " << mFileHandler.rdbuf() << std::endl;
     exit(0);
   }
 
   void Write() {
     std::cout << "Writing contents to a file" << std::endl;
     std::lock_guard<std::mutex> lock(mMutex);
-    for (uint i = 0; i < 100000; ++i) {
+    for (uint i = 0; i < 10000; ++i) {
       std::string word = "Hi, there! ";
       mFileHandler.write(word.c_str(), sizeof(word));
     }
+    mDataReady = true;
+    mCondVar.notify_all();
   }
 
  private:
+  bool isDataReady() const { return mDataReady; }
+  bool mDataReady;
   std::condition_variable mCondVar;
   std::fstream mFileHandler;
   std::mutex mMutex;
