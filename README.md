@@ -36,12 +36,14 @@ This section contains all things STL, from custom containers to STL algortihm ut
 ### Tools
 Collection of C++ tools that I am developing.
 
-#### File system
-1. File Watcher - A tool that monitors the status of a file ( using std::filesystem )
+##### File watcher
+A tool that monitors the status of a file ( using std::filesystem )
 
-#### Commandline
-1. CommandLine Parser - A command line parser demonstrating the use of std::variant
+##### Commandline parser
+A command line parser demonstrating the use of std::variant
 
+##### PGN library
+A portable game notation parser/valiator
 
 ### Author
 bigillu (Abhimanyu Selvan) is the primary author and maintainer of this repository.
