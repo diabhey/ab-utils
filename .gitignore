@@ -7,7 +7,7 @@
 *.o
 
 # Build directory
-stl/build/
+build/
 
 # Packages
 *.tar
