@@ -1,40 +1,35 @@
 #pragma once
+
 /**
-*
-* @file: DataTypes.h
-* @brief Stores the custom data types.   
-*
-*/
+ * @file DataTypes.h
+ * @author bigillu
+ * @brief PgnLib data types.
+ * @version 0.1
+ * @date 2019-03-23
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 
 /*!Headers*/
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <memory>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 #include <iterator>
-#include <map>
-#include <vector>
 #include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-namespace PgnLib
-{
+namespace PgnLib {
 /*! Custom types */
 using PgnFileSingleRead = std::istream_iterator<std::string>;
 using PgnMoveMap = std::map<int, std::pair<std::string, std::string>>;
 using PgnMoveMaps = std::vector<PgnMoveMap>;
-}
+}  // namespace PgnLib
 
-namespace Misc
-{
-enum ExitType
-{
-    Success = 0,
-    Failed = 1
-};
-enum Validity
-{
-    Invalid = false,
-    Valid = true
-};
-}
+namespace Misc {
+enum ExitType { Success = 0, Failed = 1 };
+enum Validity { Invalid = false, Valid = true };
+}  // namespace Misc
