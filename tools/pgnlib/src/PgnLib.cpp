@@ -10,6 +10,7 @@
  */
 
 /*! Headers */
+#include <benchmark/benchmark.h>
 #include <fstream>
 #include "PgnDisplay.h"
 #include "PgnExtractor.h"

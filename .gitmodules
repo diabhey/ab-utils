@@ -1,0 +1,6 @@
+[submodule "tools/pgnlib/submodules/googletest"]
+	path = tools/pgnlib/submodules/googletest
+	url = https://github.com/google/googletest.git
+[submodule "tools/pgnlib/submodules/benchmark"]
+	path = tools/pgnlib/submodules/benchmark
+	url = https://github.com/google/benchmark.git

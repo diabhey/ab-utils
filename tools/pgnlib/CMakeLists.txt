@@ -29,5 +29,20 @@ set( SRCS
     ${SRC}/PgnDisplay.cpp
     )
 
+# build google benchmark (target: benchmark)
+# do not build tests of benchmarking lib
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Suppressing benchmark's tests" FORCE)
+add_subdirectory(submodules/benchmark)
+
+# build tests (targets: gtest_main, gtest)
+add_subdirectory(submodules/googletest)
+
+# 
 include_directories(${INCLUDE_DIR} ${DATA})
 add_executable(${TARGET_NAME} ${SRCS})
+
+# google benchmark
+target_link_libraries("${TARGET_NAME}" benchmark)
+
+# googletest
+target_link_libraries("${TARGET_NAME}" gtest)
