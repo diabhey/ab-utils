@@ -16,7 +16,6 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-#include <list>
 #include <map>
 #include <memory>
 #include <string>
@@ -28,8 +27,3 @@ using PgnFileSingleRead = std::istream_iterator<std::string>;
 using PgnMoveMap = std::map<int, std::pair<std::string, std::string>>;
 using PgnMoveMaps = std::vector<PgnMoveMap>;
 }  // namespace PgnLib
-
-namespace Misc {
-enum ExitType { Success = 0, Failed = 1 };
-enum Validity { Invalid = false, Valid = true };
-}  // namespace Misc

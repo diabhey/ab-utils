@@ -28,7 +28,7 @@ static void BM_PgnLib(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_PgnLib)->Arg(1000);
+BENCHMARK(BM_PgnLib)->UseRealTime();
 
 int main(int argc, char* argv[]) {
   try {
@@ -38,9 +38,31 @@ int main(int argc, char* argv[]) {
     }
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();
-  }
-  catch (std::exception& e) {
+  } catch (std::exception& e) {
     std::cerr << "Exception: " << e.what() << std::endl;
   }
   return EXIT_SUCCESS;
 }
+
+// /**
+//  * @brief App
+//  *
+//  * @param argc
+//  * @param argv
+//  * @return int
+//  */
+// int main(int argc, char* argv[]) {
+//   try {
+//     if (argc != 2) {
+//       std::cerr << "Usage: ./PgnLib <pgn file path>" << std::endl;
+//       return EXIT_FAILURE;
+//     }
+//     std::ifstream istr(argv[1]);
+//     PgnLib::PgnExtractor extract(istr);
+//     PgnLib::PgnValidator validate(extract.GetMoveMaps());
+//     PgnLib::PgnDisplay display(validate.GetValidatedMoveMaps());
+//   } catch (std::exception& e) {
+//     std::cerr << "Exception: " << e.what() << std::endl;
+//   }
+//   return EXIT_SUCCESS;
+// }

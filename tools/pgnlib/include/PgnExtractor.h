@@ -36,13 +36,6 @@ class PgnExtractor {
   ~PgnExtractor();
 
   /**
-   * @brief	Processes the contents of the pgn file.
-   *
-   * @param	std::ifstream&	Input File stream reader
-   */
-  void PgnFileParser(std::ifstream &istreamReader);
-
-  /**
    * @brief	Get the vector of move maps
    *
    * @return Pointer of type PgnMoveMaps
@@ -50,6 +43,13 @@ class PgnExtractor {
   PgnMoveMaps *GetMoveMaps();
 
  private:
+  /**
+   * @brief	Processes the contents of the pgn file.
+   *
+   * @param	std::ifstream&	Input File stream reader
+   */
+  void PgnFileParser(std::ifstream &istreamReader);
+
   /**
    * @brief Checks the end game pgn detection
    *

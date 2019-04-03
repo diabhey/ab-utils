@@ -15,10 +15,10 @@
 
 /*! Namespaces */
 using namespace PgnLib;
-using namespace Misc;
 
 /*! Const data */
-std::list<std::string> EndGameNotation = {"0-1", "1/2-1/2", "1-0"};
+std::vector<std::string> EndGameNotation = {"0-1", "1/2-1/2", "1-0"};
+const std::string findFirstMove = "1.";
 
 PgnExtractor::PgnExtractor(std::ifstream &iRead)
     : mFileReader(iRead),
@@ -35,7 +35,7 @@ PgnExtractor::~PgnExtractor() { mFileReader.close(); }
 PgnMoveMaps *PgnExtractor::GetMoveMaps() { return mMoveMaps.release(); }
 
 void PgnExtractor::PgnFileParser(std::ifstream &iRead) {
-  const std::string findFirstMove = "1.";
+
   PgnFileSingleRead itr(iRead);
   PgnFileSingleRead eof;
   while (itr != eof) {

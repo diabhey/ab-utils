@@ -38,15 +38,14 @@ void PgnLib::PgnValidator::PgnValidate() const {
   }
 }
 
-Misc::Validity PgnLib::PgnValidator::Validate(const std::string &pgn) const {
+bool PgnLib::PgnValidator::Validate(const std::string &pgn) const {
   std::smatch mSmatch;
   // Simple regular expression matching and extraction
   std::regex game_notation(
       "([RNBKQP]?)([a-h]|[1-8]?)([x]?)([a-h])"
       "([1-8])([+|#]?)|(O-O-O)|(O-O)");
 
-  return (std::regex_match(pgn, mSmatch, game_notation)) ? Misc::Valid
-                                                         : Misc::Invalid;
+  return (std::regex_match(pgn, mSmatch, game_notation)) ? true : false;
 }
 
 PgnLib::PgnMoveMaps *PgnLib::PgnValidator::GetValidatedMoveMaps() {

@@ -57,7 +57,7 @@ class PgnValidator {
    *
    * @return bool
    */
-  Misc::Validity Validate(const std::string &pgn) const;
+  bool Validate(const std::string &pgn) const;
 
   std::unique_ptr<PgnMoveMaps> mValidateData;
 };
