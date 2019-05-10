@@ -17,22 +17,33 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <utility>
 
 enum class FileStatus { created, modified, erased };
-
+/**
+ * @brief
+ *
+ */
 class FileWatcher {
  public:
+  using file_size = uint;
   FileWatcher(const std::string& pathToWatch,
               std::chrono::duration<unsigned int, std::milli> delay)
       : mPathToWatch(pathToWatch), mDelay(delay) {
     for (auto& file :
          std::experimental::filesystem::recursive_directory_iterator(
              mPathToWatch)) {
-      mFilePaths[file.path()] =
+      mFilePaths[file.path()].first =
           std::experimental::filesystem::last_write_time(file);
+      mFilePaths[file.path()].second =
+          std::experimental::filesystem::file_size(file);
     }
   }
-
+  /**
+   * @brief
+   *
+   * @param exec
+   */
   void start(const std::function<void(std::string, FileStatus)>& exec) {
     while (mRunning) {
       // Wait for the delay
@@ -42,6 +53,7 @@ class FileWatcher {
         if (!std::experimental::filesystem::exists(file.first)) {
           exec(file.first, FileStatus::erased);
           mFilePaths.erase(file.first);
+          break;
         }
       }
       // Check to see if a file has been created or modified.
@@ -50,15 +62,22 @@ class FileWatcher {
                mPathToWatch)) {
         auto file_latest_write_time =
             std::experimental::filesystem::last_write_time(file);
+        auto file_size = std::experimental::filesystem::file_size(file);
 
+        // if (std::experimental::filesystem::is_directory(file)) {
+        //   auto file_size = std::experimental::filesystem::file_size(file);
+        // }
         if (not(mFilePaths.find(file.path()) != mFilePaths.end())) {
-          mFilePaths[file.path()] = file_latest_write_time;
+          mFilePaths[file.path()].first = file_latest_write_time;
+          mFilePaths[file.path()].second = file_size;
           exec(file.path(), FileStatus::created);
         }
         // File modification check
         else {
-          if (mFilePaths[file.path()] != file_latest_write_time) {
-            mFilePaths[file.path()] = file_latest_write_time;
+          if (mFilePaths[file.path()].first != file_latest_write_time &&
+              mFilePaths[file.path()].second != file_size) {
+            mFilePaths[file.path()].first = file_latest_write_time;
+            mFilePaths[file.path()].second = file_size;
             exec(file.path(), FileStatus::modified);
           }
         }
@@ -70,6 +89,8 @@ class FileWatcher {
   std::string mPathToWatch;
   bool mRunning = true;
   std::chrono::duration<unsigned int, std::milli> mDelay;
-  std::unordered_map<std::string, std::experimental::filesystem::file_time_type>
+  std::unordered_map<
+      std::string,
+      std::pair<std::experimental::filesystem::file_time_type, file_size>>
       mFilePaths;
 };
