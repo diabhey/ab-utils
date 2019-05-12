@@ -27,33 +27,17 @@ int main(int argc, char* argv[]) {
       std::cerr << "Usage: ./a.out <directory path to monitor>" << std::endl;
       return EXIT_FAILURE;
     }
-    // Create a FileWatcher instance that will check the current folder for
+    // Create a FileWatcher instance that will check the current diretory for
     // changes every 5 seconds
     FileWatcher fw{std::string(argv[1]), std::chrono::seconds(5)};
 
-    // Start monitoring a folder for changes and (in case of changes)
-    // run a user provided lambda function
-    fw.start([](const std::string& pathToWatch,
-                FileStatus status) -> void {
+    // Start monitoring the files in a directory.
+    fw.start([](const std::string& pathToWatch, FileStatus status) -> void {
       // Process only regular files, all other file types are ignored
       if (!std::experimental::filesystem::is_regular_file(
               std::experimental::filesystem::path(pathToWatch)) &&
           status != FileStatus::erased) {
         return;
-      }
-
-      switch (status) {
-        case FileStatus::created:
-          std::cout << "File created: " << pathToWatch << '\n';
-          break;
-        case FileStatus::modified:
-          std::cout << "File modified: " << pathToWatch << '\n';
-          break;
-        case FileStatus::erased:
-          std::cout << "File erased: " << pathToWatch << '\n';
-          break;
-        default:
-          std::cout << "Error! Unknown file status.\n";
       }
     });
   } catch (std::exception& e) {

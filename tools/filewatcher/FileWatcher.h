@@ -14,6 +14,7 @@
 #include <chrono>
 #include <experimental/filesystem>
 #include <functional>
+#include <iomanip>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -51,6 +52,7 @@ class FileWatcher {
       // Check to see if an existing file has been erased.
       for (auto& file : mFilePaths) {
         if (!std::experimental::filesystem::exists(file.first)) {
+          std::cout << file.first << " was erased" << std::endl;
           exec(file.first, FileStatus::erased);
           mFilePaths.erase(file.first);
           break;
@@ -62,22 +64,25 @@ class FileWatcher {
                mPathToWatch)) {
         auto file_latest_write_time =
             std::experimental::filesystem::last_write_time(file);
+        auto ftime = decltype(file_latest_write_time)::clock::to_time_t(
+            file_latest_write_time);
         auto file_size = std::experimental::filesystem::file_size(file);
 
-        // if (std::experimental::filesystem::is_directory(file)) {
-        //   auto file_size = std::experimental::filesystem::file_size(file);
-        // }
         if (not(mFilePaths.find(file.path()) != mFilePaths.end())) {
           mFilePaths[file.path()].first = file_latest_write_time;
           mFilePaths[file.path()].second = file_size;
+          std::cout << "Created: " << file.path().filename() << " " << file_size
+                    << " " << std::asctime(std::localtime(&ftime)) << std::endl;
           exec(file.path(), FileStatus::created);
         }
         // File modification check
         else {
-          if (mFilePaths[file.path()].first != file_latest_write_time &&
-              mFilePaths[file.path()].second != file_size) {
+          if (mFilePaths[file.path()].first != file_latest_write_time) {
             mFilePaths[file.path()].first = file_latest_write_time;
             mFilePaths[file.path()].second = file_size;
+            std::cout << "Modified: " << file.path().filename() << " "
+                      << file_size << " "
+                      << std::asctime(std::localtime(&ftime)) << std::endl;
             exec(file.path(), FileStatus::modified);
           }
         }
