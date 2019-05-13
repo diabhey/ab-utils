@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <experimental/filesystem>
+#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <string>
@@ -30,7 +31,12 @@ class FileWatcher {
   using file_size = uint;
   FileWatcher(const std::string& pathToWatch,
               std::chrono::duration<unsigned int, std::milli> delay)
-      : mPathToWatch(pathToWatch), mDelay(delay) {
+      : mPathToWatch(pathToWatch),
+        mDelay(delay),
+        mLogger("logger.txt", std::ios::in | std::ios::out) {
+    if (not mLogger.is_open()) {
+      throw std::runtime_error("Logger file not found!\n");
+    }
     for (auto& file :
          std::experimental::filesystem::recursive_directory_iterator(
              mPathToWatch)) {
@@ -40,9 +46,14 @@ class FileWatcher {
           std::experimental::filesystem::file_size(file);
     }
   }
+
+  /**
+   * @brief Destroy the File Watcher object
+   *
+   */
+  ~FileWatcher() { mLogger.close(); }
   /**
    * @brief
-   *
    * @param exec
    */
   void start(const std::function<void(std::string, FileStatus)>& exec) {
@@ -52,7 +63,7 @@ class FileWatcher {
       // Check to see if an existing file has been erased.
       for (auto& file : mFilePaths) {
         if (!std::experimental::filesystem::exists(file.first)) {
-          std::cout << file.first << " was erased" << std::endl;
+          mLogger << file.first << " was erased" << std::endl;
           exec(file.first, FileStatus::erased);
           mFilePaths.erase(file.first);
           break;
@@ -69,21 +80,23 @@ class FileWatcher {
         auto file_size = std::experimental::filesystem::file_size(file);
 
         if (not(mFilePaths.find(file.path()) != mFilePaths.end())) {
-          mFilePaths[file.path()].first = file_latest_write_time;
-          mFilePaths[file.path()].second = file_size;
-          std::cout << "Created: " << file.path().filename() << " " << file_size
-                    << " " << std::asctime(std::localtime(&ftime)) << std::endl;
-          exec(file.path(), FileStatus::created);
-        }
-        // File modification check
-        else {
-          if (mFilePaths[file.path()].first != file_latest_write_time) {
+          if (not(file.path().extension() == ".bck")) {
             mFilePaths[file.path()].first = file_latest_write_time;
             mFilePaths[file.path()].second = file_size;
-            std::cout << "Modified: " << file.path().filename() << " "
+            mLogger << "Created: " << file.path().filename() << " " << file_size
+                    << " " << std::asctime(std::localtime(&ftime)) << std::endl;
+            exec(file.path(), FileStatus::created);
+          }
+          // File modification check
+          else {
+            if (mFilePaths[file.path()].first != file_latest_write_time) {
+              mFilePaths[file.path()].first = file_latest_write_time;
+              mFilePaths[file.path()].second = file_size;
+              mLogger << "Modified: " << file.path().filename() << " "
                       << file_size << " "
                       << std::asctime(std::localtime(&ftime)) << std::endl;
-            exec(file.path(), FileStatus::modified);
+              exec(file.path(), FileStatus::modified);
+            }
           }
         }
       }
@@ -98,4 +111,5 @@ class FileWatcher {
       std::string,
       std::pair<std::experimental::filesystem::file_time_type, file_size>>
       mFilePaths;
+  std::fstream mLogger;
 };
