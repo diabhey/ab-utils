@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include "FileWatcher.h"
+
 /**
  * @brief
  *
@@ -29,19 +30,35 @@ int main(int argc, char* argv[]) {
     }
     // Create a FileWatcher instance that will check the current diretory for
     // changes every 5 seconds
-    FileWatcher fw{std::string(argv[1]), std::chrono::seconds(5)};
+    FileWatcher fw{std::string(argv[1]), std::chrono::seconds(1)};
 
-    // Start monitoring the files in a directory.
-    fw.start([](const std::string& pathToWatch, FileStatus status) -> void {
-      // Process only regular files, all other file types are ignored
-      if (!std::experimental::filesystem::is_regular_file(
-              std::experimental::filesystem::path(pathToWatch)) &&
-          status != FileStatus::erased) {
-        return;
-      }
-    });
+    do {
+      // Start monitoring the files in a directory.
+      fw.start([](const std::string& pathToWatch, FileStatus status) -> void {
+        // Process only regular files, all other file types are ignored
+        if (!std::experimental::filesystem::is_regular_file(
+                std::experimental::filesystem::path(pathToWatch)) &&
+            status != FileStatus::erased) {
+          return;
+        }
+      });
+    } while (std::cin.get() != '\n');
   } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
+
   return EXIT_SUCCESS;
 }
+
+/**
+ * @TODO
+ *  1. Use a static map to hold the list of files and counter for the frequency
+
+ */
+
+// Demo of sending data via temporary files.  The default is to send data to
+// gnuplot directly through stdin.
+//
+// Compile it with:
+//   g++ -o example-tmpfile example-tmpfile.cc -lboost_iostreams -lboost_system
+//   -lboost_filesystem

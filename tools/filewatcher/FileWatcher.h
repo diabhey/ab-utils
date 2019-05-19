@@ -11,6 +11,7 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <chrono>
 #include <experimental/filesystem>
 #include <fstream>
@@ -21,7 +22,9 @@
 #include <unordered_map>
 #include <utility>
 
+static std::vector<std::pair<std::string, uint>> fileList;
 enum class FileStatus { created, modified, erased };
+
 /**
  * @brief
  *
@@ -44,6 +47,7 @@ class FileWatcher {
           std::experimental::filesystem::last_write_time(file);
       mFilePaths[file.path()].second =
           std::experimental::filesystem::file_size(file);
+      fileList.emplace_back(std::make_pair(file.path(), 0));
     }
   }
 
@@ -63,8 +67,12 @@ class FileWatcher {
       // Check to see if an existing file has been erased.
       for (auto& file : mFilePaths) {
         if (!std::experimental::filesystem::exists(file.first)) {
-          mLogger << file.first << " was erased" << std::endl;
+          mLogger << "Erased: " << file.first << std::flush;
           exec(file.first, FileStatus::erased);
+
+          // fileList.erase(
+          //     std::remove(fileList.begin(), fileList.end(), file.first),
+          //     fileList.end());
           mFilePaths.erase(file.first);
           break;
         }
@@ -83,20 +91,31 @@ class FileWatcher {
           if (not(file.path().extension() == ".bck")) {
             mFilePaths[file.path()].first = file_latest_write_time;
             mFilePaths[file.path()].second = file_size;
-            mLogger << "Created: " << file.path().filename() << " " << file_size
-                    << " " << std::asctime(std::localtime(&ftime)) << std::endl;
+            mLogger << "Created: " << file.path().filename() << " "
+                    << " Size: " << file_size << " "
+                    << " Time: " << std::asctime(std::localtime(&ftime)) << " "
+                    << " Freq: " << 0 << std::endl;
+            fileList.emplace_back(std::make_pair(file.path(), 0));
             exec(file.path(), FileStatus::created);
           }
-          // File modification check
-          else {
-            if (mFilePaths[file.path()].first != file_latest_write_time) {
-              mFilePaths[file.path()].first = file_latest_write_time;
-              mFilePaths[file.path()].second = file_size;
-              mLogger << "Modified: " << file.path().filename() << " "
-                      << file_size << " "
-                      << std::asctime(std::localtime(&ftime)) << std::endl;
-              exec(file.path(), FileStatus::modified);
-            }
+        }
+        // File modification check
+        else {
+          if (mFilePaths[file.path()].first != file_latest_write_time) {
+            mFilePaths[file.path()].first = file_latest_write_time;
+            mFilePaths[file.path()].second = file_size;
+            // If the file matches increments its counter
+            auto itr =
+                std::find_if(fileList.begin(), fileList.end(),
+                             [&](std::pair<std::string, uint>& i) -> bool {
+                               return i.first == file.path();
+                             });
+            itr->second += 1;
+            mLogger << "Modified: " << itr->first << " "
+                    << " Size: " << file_size << " "
+                    << " Time: " << std::asctime(std::localtime(&ftime)) << " "
+                    << " Freq: " << itr->second << std::endl;
+            exec(file.path(), FileStatus::modified);
           }
         }
       }
