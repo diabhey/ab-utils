@@ -1,9 +1,15 @@
-#include <deque>
-#include <iostream>
-#include <list>
-#include <map>
-#include <string>
-#include <vector>
+/**
+ * @file Printer.h
+ * @author Bigillu
+ * @brief Generic Printer Library
+ * @version 0.1
+ * @date 2019-06-08
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+#include <ostream>
+#include <type_traits>
 
 template <typename Key, typename Value>
 std::ostream& operator<<(std::ostream& os,
@@ -18,17 +24,21 @@ class Printer {
 
   // For integral types
   template <typename T, typename = typename std::enable_if<
-                            std::is_integral<T>::value ||
-                            std::is_arithmetic<T>::value>::type>
-  void print(const T value) const {
-    std::cout << value << "\n";
+                            std::is_integral<T>::value>::type>
+  void print(std::ostream& stream, const T value) const {
+    stream << value << '\n';
   }
   // For non-integral types
   template <typename T, typename = typename std::enable_if<
-                            !(std::is_integral<T>::value ||
-                              std::is_arithmetic<T>::value)>::type>
-  void print(const T& value) const {
-    std::cout << value << "\n";
+                            !std::is_integral<T>::value>::type>
+  void print(std::ostream& stream, const T& value) const {
+    stream << value << '\n';
+  }
+  // For pointer types (does not deduce smart pointers)
+  template <typename T,
+            typename = typename std::enable_if<std::is_pointer<T>::value>::type>
+  void print(std::ostream& stream, const T value) {
+    stream << *value << '\n';
   }
 
   // STL containers
@@ -41,11 +51,11 @@ class Printer {
 
   template <typename T,
             typename = typename std::enable_if<is_iterable<T>::value>::type>
-  void print(const T& value) {
+  void print(std::ostream& stream, const T& value) {
     for (typename T::const_iterator it = value.begin(); it != value.end();
          ++it) {
-      std::cout << *it << " ";
+      stream << *it << " ";
     }
-    std::cout << '\n';
+    stream << '\n';
   }
 };
