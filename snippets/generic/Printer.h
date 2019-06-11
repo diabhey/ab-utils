@@ -13,7 +13,8 @@
 
 namespace ab {
 // Overloading the stream operator to print a key value pair.
-// This will be also triggered while printing an std::map<> for instance.
+// This will be also triggered while printing an std::map<key, value> for
+// instance.
 template <typename Key, typename Value>
 std::ostream& operator<<(std::ostream& os,
                          const std::pair<const Key, Value>& p) {
@@ -44,7 +45,7 @@ class Printer {
   }
 
   /**
-   * @brief prin() specialization for pointer types
+   * @brief print() specialization for pointer types
    * Does not deduct smart pointers
    */
   template <typename T,
@@ -54,8 +55,18 @@ class Printer {
   }
 
   /**
+   * @brief print() specialization for smart pointers
+   * Fix me: Matches the print() of containers, especially,std::vector<>
+   */
+  template <typename U, template <typename> class T>
+  void print(std::ostream& stream, T<U> p) {
+    stream << *p.get() << '\n';
+  }
+
+  /**
    * @brief print() specialization for STL containers
-   * Both sequential and associative containers are taken intou account
+   * Both sequential and associative containers are taken intou
+   * account
    */
   template <typename T, typename = void>
   struct is_iterable : std::false_type {};
