@@ -13,8 +13,31 @@
 #include <vector>
 #include "Printer.h"
 
+/**
+ * @brief Coordinate class
+ * Used for test purposes only
+ */
+class Coord {
+ public:
+  Coord(int x_, int y_) : mX(x_), mY(y_) {}
+  
+  friend std::ostream& operator<<(std::ostream& s, const Coord& obj) {
+    s << "Coord: { " << obj.mX << ", " << obj.mY << " }";
+    return s;
+  }
+
+ private:
+  int mX, mY;
+};
+
+/**
+ * @brief Entry point into the test application
+ *
+ */
 int main() {
-  Printer p;
+  Coord c{1, 2};
+  ab::Printer p;
+  p.print(std::cout, c);
   p.print(std::cout, char{'c'});
   p.print(std::cout, int{7});
   p.print(std::cout, double{3.14});

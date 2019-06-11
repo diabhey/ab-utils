@@ -11,6 +11,9 @@
 #include <ostream>
 #include <type_traits>
 
+namespace ab {
+// Overloading the stream operator to print a key value pair.
+// This will be also triggered while printing an std::map<> for instance.
 template <typename Key, typename Value>
 std::ostream& operator<<(std::ostream& os,
                          const std::pair<const Key, Value>& p) {
@@ -20,28 +23,40 @@ std::ostream& operator<<(std::ostream& os,
 
 class Printer {
  public:
-  Printer() {}
-
-  // For integral types
+  /**
+   * @brief print() specialization for integral types
+   *
+   */
   template <typename T, typename = typename std::enable_if<
                             std::is_integral<T>::value>::type>
   void print(std::ostream& stream, const T value) const {
     stream << value << '\n';
   }
-  // For non-integral types
+
+  /**
+   * @brief print() specialization for non-integral types (ex, std::string)
+   * passing a std::string by reference is cheaper than passing by value
+   */
   template <typename T, typename = typename std::enable_if<
                             !std::is_integral<T>::value>::type>
   void print(std::ostream& stream, const T& value) const {
     stream << value << '\n';
   }
-  // For pointer types (does not deduce smart pointers)
+
+  /**
+   * @brief prin() specialization for pointer types
+   * Does not deduct smart pointers
+   */
   template <typename T,
             typename = typename std::enable_if<std::is_pointer<T>::value>::type>
   void print(std::ostream& stream, const T value) {
     stream << *value << '\n';
   }
 
-  // STL containers
+  /**
+   * @brief print() specialization for STL containers
+   * Both sequential and associative containers are taken intou account
+   */
   template <typename T, typename = void>
   struct is_iterable : std::false_type {};
   template <typename T>
@@ -59,3 +74,4 @@ class Printer {
     stream << '\n';
   }
 };
+}  // namespace ab
