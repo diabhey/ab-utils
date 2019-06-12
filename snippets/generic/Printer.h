@@ -55,17 +55,35 @@ class Printer {
   }
 
   /**
-   * @brief print() specialization for smart pointers
-   * Fix me: Matches the print() of containers, especially,std::vector<>
+   * @brief print() specialization for std::unique_ptr
+   * Does not detect std::shared_ptr
    */
-  template <typename U, template <typename> class T>
-  void print(std::ostream& stream, T<U> p) {
-    stream << *p.get() << '\n';
+  template <typename U, template <typename> class T,
+            typename = typename std::enable_if<
+                not std::is_copy_constructible<T<U>>::value>::type>
+  void print(std::ostream& stream, T<U> ptr) {
+    stream << *ptr.get() << '\n';
+  }
+
+  /**
+   * @brief @brief print() specialization for std::shared_ptr
+   */
+  template <typename T>
+  struct is_shared_ptr : std::false_type {};
+  template <typename T>
+  struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+
+  template <typename U, template <typename> class T,
+            typename = typename std::enable_if<
+                is_shared_ptr<decltype(std::declval<T<U>>().value)>::value,
+                void>::type>
+  void print(std::ostream& stream, T<U> ptr) const {
+    stream << *ptr.get() << '\n';
   }
 
   /**
    * @brief print() specialization for STL containers
-   * Both sequential and associative containers are taken intou
+   * Both sequential and associative containers are taken into
    * account
    */
   template <typename T, typename = void>

@@ -31,23 +31,26 @@ class Coord {
   int mX, mY;
 };
 
-/**
+/**`
  * @brief Entry point into the test application
  *
  */
 int main() {
   auto i = 9;
   Coord c{1, 2};
+  Coord cShared{9, 28};
   std::unique_ptr<Coord> pC = std::make_unique<Coord>(c);
+  std::shared_ptr<Coord> spC = std::make_shared<Coord>(cShared);
 
   ab::Printer p;
   p.print(std::cout, c);
   p.print(std::cout, std::move(pC));
+  p.print(std::cout, std::move(spC));
   p.print(std::cout, char{'c'});
   p.print(std::cout, int{7});
   p.print(std::cout, double{3.14});
   p.print(std::cout, "bigillu");
-  // p.print(std::cout, std::vector<int>{1, 2, 3, 4, 5});
+  p.print(std::cout, std::vector<int>{1, 2, 3, 4, 5});
   p.print(std::cout, std::map<int, int>{{1, 2}, {4, 5}});
   p.print(std::cout, &i);
   return EXIT_SUCCESS;
