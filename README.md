@@ -45,7 +45,7 @@ A tool that monitors the status of a file ( using std::filesystem )
 A command line parser demonstrating the use of std::variant
 
 ##### PGN library
-A portable game notation parser/valiator
+A portable game notation parser/validator
 
 ### Author
 bigillu (Abhimanyu Selvan) is the primary author and maintainer of this repository.
