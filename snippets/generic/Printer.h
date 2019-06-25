@@ -8,99 +8,41 @@
  * @copyright Copyright (c) 2019
  *
  */
+#include <experimental/source_location>
 #include <ostream>
-#include <type_traits>
 
 namespace ab {
-// Overloading the stream operator to print a key value pair.
-// This will be also triggered while printing an std::map<key, value> for
-// instance.
-template <typename Key, typename Value>
-std::ostream& operator<<(std::ostream& os,
-                         const std::pair<const Key, Value>& p) {
-  os << "{ " << p.first << ", " << p.second << " }";
-  return os;
+/**
+ * @brief print() specialization for integral types
+ *
+ */
+template <typename T, typename = typename std::enable_if<
+                          std::is_integral<T>::value ||
+                          std::is_floating_point<T>::value>::type>
+void print(std::ostream& stream, const T value) {
+  stream << value << '\n';
 }
 
-class Printer {
- public:
-  /**
-   * @brief print() specialization for integral types
-   *
-   */
-  template <typename T, typename = typename std::enable_if<
-                            std::is_integral<T>::value>::type>
-  void print(std::ostream& stream, const T value) const {
-    stream << value << '\n';
-  }
+/**
+ * @brief print() specialization for non-integral types (ex, std::string)
+ * passing a std::string by reference is cheaper than passing by value
+ */
 
-  /**
-   * @brief print() specialization for non-integral types (ex, std::string)
-   * passing a std::string by reference is cheaper than passing by value
-   */
-  template <typename T, typename = typename std::enable_if<
-                            !std::is_integral<T>::value>::type>
-  void print(std::ostream& stream, const T& value) const {
-    stream << value << '\n';
-  }
+template <typename T, typename = typename std::enable_if<
+                          not(std::is_integral<T>::value ||
+                              std::is_floating_point<T>::value)>::type>
+void print(std::ostream& stream, const T& value) {
+  stream << value << '\n';
+}
 
-  /**
-   * @brief print() specialization for pointer types
-   * Does not deduct smart pointers
-   */
-  template <typename T,
-            typename = typename std::enable_if<std::is_pointer<T>::value>::type>
-  void print(std::ostream& stream, const T value) {
-    stream << *value << '\n';
-  }
-
-  /**
-   * @brief print() specialization for std::unique_ptr
-   * Does not detect std::shared_ptr
-   */
-  template <typename U, template <typename> class T,
-            typename = typename std::enable_if<
-                not std::is_copy_constructible<T<U>>::value>::type>
-  void print(std::ostream& stream, T<U> ptr) {
-    stream << *ptr.get() << '\n';
-  }
-
-  /**
-   * @brief @brief print() specialization for std::shared_ptr
-   */
-  template <typename T>
-  struct is_shared_ptr : std::false_type {};
-  template <typename T>
-  struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
-
-  template <typename U, template <typename> class T,
-            typename = typename std::enable_if<
-                is_shared_ptr<decltype(std::declval<T<U>>().value)>::value,
-                void>::type>
-  void print(std::ostream& stream, T<U> ptr) const {
-    stream << *ptr.get() << '\n';
-  }
-
-  /**
-   * @brief print() specialization for STL containers
-   * Both sequential and associative containers are taken into
-   * account
-   */
-  template <typename T, typename = void>
-  struct is_iterable : std::false_type {};
-  template <typename T>
-  struct is_iterable<T, std::void_t<decltype(std::declval<T>().begin()),
-                                    decltype(std::declval<T>().end())>>
-      : std::true_type {};
-
-  template <typename T,
-            typename = typename std::enable_if<is_iterable<T>::value>::type>
-  void print(std::ostream& stream, const T& value) {
-    for (typename T::const_iterator it = value.begin(); it != value.end();
-         ++it) {
-      stream << *it << " ";
-    }
-    stream << '\n';
-  }
-};
+/**
+ * @brief Generic print utility
+ */
+template <typename... Args>
+void print(std::ostream& stream,
+           const std::experimental::source_location& location, Args&&... args) {
+  stream << location.file_name() << "::" << location.function_name() << "("
+         << location.line() << ") : ";
+  print(stream, std::forward<Args>(args)...);
+}
 }  // namespace ab
