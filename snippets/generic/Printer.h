@@ -9,7 +9,7 @@
  *
  */
 #include <experimental/source_location>
-#include <ostream>
+#include <iostream>
 
 namespace ab {
 /**
@@ -20,7 +20,7 @@ template <typename T, typename = typename std::enable_if<
                           std::is_integral<T>::value ||
                           std::is_floating_point<T>::value>::type>
 void print(std::ostream& stream, const T value) {
-  stream << value << '\n';
+  stream << value << " ";
 }
 
 /**
@@ -32,17 +32,46 @@ template <typename T, typename = typename std::enable_if<
                           not(std::is_integral<T>::value ||
                               std::is_floating_point<T>::value)>::type>
 void print(std::ostream& stream, const T& value) {
-  stream << value << '\n';
+  stream << value << " ";
 }
 
 /**
- * @brief Generic print utility
+ * @brief Generic recursive printer function
+ *
+ * @tparam Function function object to be called
+ * @tparam First First argument of the pack
+ * @tparam Rest The remaining arguments of the pack
  */
-template <typename... Args>
-void print(std::ostream& stream,
-           const std::experimental::source_location& location, Args&&... args) {
-  stream << location.file_name() << "::" << location.function_name() << "("
-         << location.line() << ") : ";
-  print(stream, std::forward<Args>(args)...);
+template <typename Function, typename FirstArg, typename... Rest>
+void printArgs(Function f, FirstArg first, Rest... rest) {
+  f(first);
+  printArgs(f, rest...);
 }
+
+/**
+ * @brief Called when the parameter pack is empty
+ *
+ * @tparam Function function object to be called.
+ */
+template <typename Function>
+void printArgs(Function f) {
+  // Parameter pack is empty.
+}
+
+/**
+ * @brief Generic printer function
+ *
+ * @tparam Args list of arguments
+ * @param stream Ostream object reference
+ * @param location current location of the file
+ * @param args list of args of different types
+ */
+template <class... Args>
+void printer(std::ostream& stream,
+             const std::experimental::source_location& location, Args... args) {
+  stream << location.file_name() << "::" << location.function_name() << "("
+         << location.line() << ") - ";
+  printArgs([&](auto arg) { print(stream, arg); }, args...);
+}
+
 }  // namespace ab

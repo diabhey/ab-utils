@@ -18,8 +18,7 @@ using namespace std::experimental;
  *
  */
 int main() {
-  ab::print(std::cout, source_location::current(), char{'c'});
-  ab::print(std::cout, source_location::current(), int{7});
-  ab::print(std::cout, source_location::current(), double{3.14});
+  ab::printer(std::cout, source_location::current(), "char: ", char{'c'},
+              ", integer: ", int{7}, ", double: ", double{2.2});
   return EXIT_SUCCESS;
 }
