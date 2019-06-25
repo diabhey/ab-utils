@@ -28,6 +28,8 @@ Markup :
 3. Threads
 4. Async
    1. boost-async-tcp-client-server
+5. Generic
+   1. Generic header only printer library
 
 ### STL
 This section contains all things STL, from custom containers to STL algortihm utilities.
@@ -43,7 +45,7 @@ A tool that monitors the status of a file ( using std::filesystem )
 A command line parser demonstrating the use of std::variant
 
 ##### PGN library
-A portable game notation parser/valiator
+A portable game notation parser/validator
 
 ### Author
 bigillu (Abhimanyu Selvan) is the primary author and maintainer of this repository.
