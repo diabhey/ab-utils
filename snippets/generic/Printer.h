@@ -36,6 +36,16 @@ void print(std::ostream& stream, const T& value) {
 }
 
 /**
+ * @brief Called when the parameter pack is empty
+ *
+ * @tparam Function function object to be called.
+ */
+template <typename Function>
+void printArgs(Function f) {
+  // Parameter pack is empty.
+}
+
+/**
  * @brief Generic recursive printer function
  *
  * @tparam Function function object to be called
@@ -46,16 +56,6 @@ template <typename Function, typename FirstArg, typename... Rest>
 void printArgs(Function f, FirstArg first, Rest... rest) {
   f(first);
   printArgs(f, rest...);
-}
-
-/**
- * @brief Called when the parameter pack is empty
- *
- * @tparam Function function object to be called.
- */
-template <typename Function>
-void printArgs(Function f) {
-  // Parameter pack is empty.
 }
 
 /**
@@ -72,6 +72,7 @@ void printer(std::ostream& stream,
   stream << location.file_name() << "::" << location.function_name() << "("
          << location.line() << ") - ";
   printArgs([&](auto arg) { print(stream, arg); }, args...);
+  stream << '\n';
 }
 
 }  // namespace ab
