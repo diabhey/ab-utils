@@ -9,17 +9,26 @@
  *
  */
 #include <experimental/source_location>
-#include <iostream>
+#include <ostream>
+#include "TypeTraits.h"
 
 namespace ab {
+
+// Overloaded << operator to print std::pair. It will 
+// also be triggered while using std::map 
+template <typename Key, typename Value>
+std::ostream &operator<<(std::ostream &os,
+                         const std::pair<Key, Value> p) {
+  os << "{ " << p.first << ", " << p.second << " }";
+  return os;
+}
+
 /**
  * @brief print() specialization for integral types
  *
  */
-template <typename T, typename = typename std::enable_if<
-                          std::is_integral<T>::value ||
-                          std::is_floating_point<T>::value>::type>
-void print(std::ostream& stream, const T value) {
+template <typename T, typename = typename typetraits::if_integral<T>::type>
+void print(std::ostream &stream, const T value) {
   stream << value << " ";
 }
 
@@ -27,10 +36,8 @@ void print(std::ostream& stream, const T value) {
  * @brief print() specialization for non-integral types (ex, std::string)
  * passing a std::string by reference is cheaper than passing by value
  */
-template <typename T, typename = typename std::enable_if<
-                          not(std::is_integral<T>::value ||
-                              std::is_floating_point<T>::value)>::type>
-void print(std::ostream& stream, const T& value) {
+template <typename T, typename = typename typetraits::if_non_integral<T>::type>
+void print(std::ostream &stream, const T &value) {
   stream << value << " ";
 }
 
@@ -39,34 +46,12 @@ void print(std::ostream& stream, const T& value) {
  * Both sequential and associative containers are taken into
  * account
  */
-
-template <typename T, typename _ = void>
-struct is_container : std::false_type {};
-
-template <typename... Ts>
-struct is_container_helper {};
-
 template <typename T>
-struct is_container<
-    T, std::conditional_t<
-           false,
-           is_container_helper<typename T::value_type, typename T::size_type,
-                               typename T::allocator_type, typename T::iterator,
-                               typename T::const_iterator,
-                               decltype(std::declval<T>().size()),
-                               decltype(std::declval<T>().begin()),
-                               decltype(std::declval<T>().end()),
-                               decltype(std::declval<T>().cbegin()),
-                               decltype(std::declval<T>().cend())>,
-           void>> : public std::true_type {};
-
-template <typename T>
-auto print(std::ostream& stream, const T& value) ->
-    typename std::enable_if<is_container<T>::value>::type {
+auto print(std::ostream &stream, const T &value) ->
+    typename std::enable_if<typetraits::is_container<T>::value>::type {
   for (typename T::const_iterator it = value.begin(); it != value.end(); ++it) {
     stream << *it << " ";
   }
-  stream << '\n';
 }
 
 /**
@@ -101,8 +86,8 @@ void printArgs(Function f, FirstArg first, Rest... rest) {
  * @param args list of args of different types
  */
 template <class... Args>
-void printer(std::ostream& stream,
-             const std::experimental::source_location& location, Args... args) {
+void printer(std::ostream &stream,
+             const std::experimental::source_location &location, Args... args) {
   stream << location.file_name() << "::" << location.function_name() << "("
          << location.line() << ") - ";
   printArgs([&](auto arg) { print(stream, arg); }, args...);

@@ -9,6 +9,7 @@
  *
  */
 #include <iostream>
+#include <map>
 #include <vector>
 #include "Printer.h"
 
@@ -19,9 +20,8 @@ using namespace std::experimental;
  *
  */
 int main() {
-  // ab::printer(std::cout, source_location::current(), "char: ", char{'c'},
-  // ", integer: ", int{7}, ", double: ", double{2.2});
   auto vec = std::vector<int>{1, 2, 3, 4, 5};
-  ab::printer(std::cout, source_location::current(), vec, int{7});
+  ab::printer(std::cout, source_location::current(), "vec:", vec,
+              "integer:", int{7}, "map:", std::map<int, int>{{1, 2}});
   return EXIT_SUCCESS;
 }
