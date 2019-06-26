@@ -27,12 +27,46 @@ void print(std::ostream& stream, const T value) {
  * @brief print() specialization for non-integral types (ex, std::string)
  * passing a std::string by reference is cheaper than passing by value
  */
-
 template <typename T, typename = typename std::enable_if<
                           not(std::is_integral<T>::value ||
                               std::is_floating_point<T>::value)>::type>
 void print(std::ostream& stream, const T& value) {
   stream << value << " ";
+}
+
+/**
+ * @brief print() specialization for STL containers
+ * Both sequential and associative containers are taken into
+ * account
+ */
+
+template <typename T, typename _ = void>
+struct is_container : std::false_type {};
+
+template <typename... Ts>
+struct is_container_helper {};
+
+template <typename T>
+struct is_container<
+    T, std::conditional_t<
+           false,
+           is_container_helper<typename T::value_type, typename T::size_type,
+                               typename T::allocator_type, typename T::iterator,
+                               typename T::const_iterator,
+                               decltype(std::declval<T>().size()),
+                               decltype(std::declval<T>().begin()),
+                               decltype(std::declval<T>().end()),
+                               decltype(std::declval<T>().cbegin()),
+                               decltype(std::declval<T>().cend())>,
+           void>> : public std::true_type {};
+
+template <typename T>
+auto print(std::ostream& stream, const T& value) ->
+    typename std::enable_if<is_container<T>::value>::type {
+  for (typename T::const_iterator it = value.begin(); it != value.end(); ++it) {
+    stream << *it << " ";
+  }
+  stream << '\n';
 }
 
 /**
