@@ -14,11 +14,10 @@
 
 namespace ab {
 
-// Overloaded << operator to print std::pair. It will 
-// also be triggered while using std::map 
+// Overloaded << operator to print std::pair. It will
+// also be triggered while using std::map
 template <typename Key, typename Value>
-std::ostream &operator<<(std::ostream &os,
-                         const std::pair<Key, Value> p) {
+std::ostream &operator<<(std::ostream &os, const std::pair<Key, Value> p) {
   os << "{ " << p.first << ", " << p.second << " }";
   return os;
 }
@@ -49,9 +48,11 @@ void print(std::ostream &stream, const T &value) {
 template <typename T>
 auto print(std::ostream &stream, const T &value) ->
     typename std::enable_if<typetraits::is_container<T>::value>::type {
+  stream << "{ ";
   for (typename T::const_iterator it = value.begin(); it != value.end(); ++it) {
     stream << *it << " ";
   }
+  stream << " } ";
 }
 
 /**
