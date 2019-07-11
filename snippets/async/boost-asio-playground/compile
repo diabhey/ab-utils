@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Building..."
+mkdir build
+cd build
+cmake ..
+make
+echo "Done"

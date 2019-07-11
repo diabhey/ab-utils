@@ -4,3 +4,6 @@
 [submodule "tools/pgnlib/submodules/benchmark"]
 	path = tools/pgnlib/submodules/benchmark
 	url = https://github.com/google/benchmark.git
+[submodule "snippets/async/boost-asio-playground/boost-cmake"]
+	path = snippets/async/boost-asio-playground/boost-cmake
+	url = https://github.com/Orphis/boost-cmake.git
