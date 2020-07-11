@@ -18,6 +18,13 @@ Collection of popular C++ idioms written in modern C++.
 1. PIMPL
 2. CRTP (Curiously Recurring Template Pattern)
 
+### Design Patterns
+
+Collection of popular C++ design patterns written in modern C++.
+
+1. Singleton
+2. Builder
+
 ### Snippets
 
 Storing ground for reusable code snippets which demonstrate niche techniques, better performance etc.
