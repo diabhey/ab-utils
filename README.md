@@ -6,7 +6,7 @@ As a C++ software engineer, I am always on the look out for new language feature
 
 ## Contents
 - [idioms](###Idioms)
-- [design patterns](###Design Patterns)
+- [patterns](###Patterns)
 - [snippets](###Snippets)
 - [stl](###STL)
 - [tools](#Tools)
@@ -19,7 +19,7 @@ Collection of popular C++ idioms written in modern C++.
 1. PIMPL
 2. CRTP (Curiously Recurring Template Pattern)
 
-### Design Patterns
+### Patterns
 
 Collection of popular C++ design patterns written in modern C++.
 
