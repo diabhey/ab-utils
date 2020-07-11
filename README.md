@@ -6,6 +6,7 @@ As a C++ software engineer, I am always on the look out for new language feature
 
 ## Contents
 - [idioms](###Idioms)
+- [design patterns](###Design Patterns)
 - [snippets](###Snippets)
 - [stl](###STL)
 - [tools](#Tools)
