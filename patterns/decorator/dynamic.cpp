@@ -16,7 +16,8 @@ struct VirtualMachine : public IVirtualMachine {
     return oss.str();
   }
 
-  std::string reconfig(const std::string &newName) const {
+  std::string rename(const std::string &newName) {
+    _name = newName;
     std::ostringstream oss;
     oss << "**VM Configuration**\n"
         << "name: " << newName;
@@ -65,4 +66,5 @@ int main() {
   CPUConfig cpu(vm, 4);
   MemoryConfig mem(cpu, 16000);
   std::cout << mem.config() << std::endl;
+  //   mem.rename() // Not possible!!
 }
